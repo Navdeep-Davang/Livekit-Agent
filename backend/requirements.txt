@@ -1,0 +1,10 @@
+livekit-agents>=0.12
+livekit-plugins-openai
+livekit-plugins-silero
+livekit-api
+openai
+websockets
+pydantic-settings
+fastapi
+uvicorn
+python-dotenv
