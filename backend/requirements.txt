@@ -1,5 +1,5 @@
 # LiveKit Agents Framework (v1.0+)
-livekit-agents[openai,silero,sarvam,turn-detector]~=1.0
+livekit-agents[openai,silero,sarvam,cartesia]~=1.0
 
 # LiveKit API for token generation
 livekit-api

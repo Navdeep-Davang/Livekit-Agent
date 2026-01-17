@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     LIVEKIT_API_KEY: str
     LIVEKIT_API_SECRET: str
     SARVAM_API_KEY: str
+    CARTESIA_API_KEY: str
     OPENAI_API_KEY: str
 
     model_config = SettingsConfigDict(

@@ -16,6 +16,7 @@ LIVEKIT_URL=wss://your-app.livekit.cloud
 LIVEKIT_API_KEY=your-api-key
 LIVEKIT_API_SECRET=your-api-secret
 SARVAM_API_KEY=your-sarvam-key
+CARTESIA_API_KEY=your-cartesia-key
 OPENAI_API_KEY=your-openai-key
 ```
 
@@ -101,7 +102,7 @@ User speaks → Frontend (WebRTC) → LiveKit Room → Agent Worker
     ↓
 Silero VAD detects speech
     ↓
-Sarvam STT → Text
+Cartesia STT → Text
     ↓
 OpenAI GPT-4o-mini → Response text
     ↓
@@ -116,15 +117,14 @@ LiveKit Room → Frontend (WebRTC) → User hears response
 backend/
 ├── agent/
 │   ├── __init__.py
-│   ├── main.py          # AgentServer + entrypoint
-│   └── voice_agent.py   # Agent class with instructions
+│   └── main.py          # Agent + VoicePipeline logic
 ├── api/
 │   ├── __init__.py
 │   └── token.py         # Token generation endpoint
 ├── config/
 │   ├── __init__.py
 │   └── settings.py      # Pydantic settings
-├── plugins/             # (Empty - using official plugins)
 ├── requirements.txt
-└── server.py            # FastAPI token server
+├── server.py            # FastAPI token server
+└── .env                 # Environment variables
 ```

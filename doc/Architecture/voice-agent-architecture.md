@@ -10,7 +10,7 @@ Real-time voice assistant using LiveKit Agents framework with Sarvam AI (STT/TTS
 | Layer | Technology | Role |
 |-------|------------|------|
 | Transport | LiveKit (WebRTC) | Real-time audio streaming |
-| STT | Sarvam AI (WebSocket) | Speech-to-text |
+| STT | Cartesia AI (WebSocket) | Speech-to-text |
 | VAD | Silero VAD | Voice activity detection |
 | LLM | OpenAI GPT-5 mini | Conversation |
 | TTS | Sarvam AI (WebSocket) | Text-to-speech |
@@ -31,7 +31,7 @@ graph LR
     end
     subgraph Agent
         VAD[Silero VAD]
-        STT[Sarvam STT]
+        STT[Cartesia STT]
         LLM[GPT-5 mini]
         TTS[Sarvam TTS]
     end
@@ -127,7 +127,7 @@ graph LR
 3. User speaks → Browser captures audio via WebRTC
 4. Audio streams to LiveKit → Agent receives audio track
 5. Silero VAD detects speech segments → triggers STT
-6. Sarvam STT (WebSocket) → converts audio to text
+6. Cartesia STT (WebSocket) → converts audio to text
 7. Text sent to GPT-5 mini → generates response
 8. Response sent to Sarvam TTS (WebSocket) → generates audio
 9. Audio published to LiveKit room → streams to frontend
@@ -156,6 +156,7 @@ LIVEKIT_URL=wss://your-app.livekit.cloud
 LIVEKIT_API_KEY=
 LIVEKIT_API_SECRET=
 SARVAM_API_KEY=
+CARTESIA_API_KEY=
 OPENAI_API_KEY=
 ```
 

@@ -68,7 +68,7 @@ This is where the magic happens:
 
 1. **Listens** to the LiveKit room for audio
 2. **Silero VAD** - Detects when someone is speaking
-3. **Sarvam STT** - Converts speech → text
+3. **Cartesia STT** - Converts speech → text
 4. **OpenAI GPT** - Thinks and generates a response
 5. **Sarvam TTS** - Converts text → speech audio
 6. **Sends audio** back to the room
@@ -99,9 +99,9 @@ This is where the magic happens:
 9. LiveKit routes user audio → Agent Worker
    ↓
 10. Agent: 
-    - Silero VAD: "Speech detected!"
-    - Sarvam STT: "What time is it?"
-    - OpenAI: "The current time is 2:30 PM"
+- Silero VAD: "Speech detected!"
+- Cartesia STT: "What time is it?"
+- OpenAI: "The current time is 2:30 PM"
     - Sarvam TTS: *generates audio*
     ↓
 11. Agent sends audio → LiveKit → User's browser
@@ -145,8 +145,11 @@ LIVEKIT_URL=ws://localhost:7882
 LIVEKIT_API_KEY=devkey
 LIVEKIT_API_SECRET=secret
 
-# API key for Sarvam (Indian STT/TTS)
+# API key for Sarvam (Indian TTS)
 SARVAM_API_KEY=your-key
+
+# API key for Cartesia (STT)
+CARTESIA_API_KEY=your-key
 
 # API key for OpenAI (GPT brain)
 OPENAI_API_KEY=your-key
