@@ -1,12 +1,54 @@
 'use client';
 
-import { 
+import {
   LiveKitRoom,
   RoomAudioRenderer,
+  useRoomContext,
 } from '@livekit/components-react';
-import { useState, useCallback } from 'react';
+import { RoomEvent } from 'livekit-client';
+import { useState, useCallback, useEffect } from 'react';
 import { VoiceAgent } from '@/components/VoiceAgent';
 import { roomOptions } from '@/lib/livekit';
+
+// Inner component that has access to room context
+function RoomContent({ onDisconnect }: { onDisconnect: () => void }) {
+  const room = useRoomContext();
+
+  useEffect(() => {
+    // Listen for participant disconnect events
+    const handleParticipantDisconnected = () => {
+      console.log('Participant disconnected');
+    };
+
+    room.on(RoomEvent.ParticipantDisconnected, handleParticipantDisconnected);
+
+    return () => {
+      room.off(RoomEvent.ParticipantDisconnected, handleParticipantDisconnected);
+    };
+  }, [room]);
+
+  const handleDisconnect = useCallback(async () => {
+    await room.disconnect();
+    onDisconnect();
+  }, [room, onDisconnect]);
+
+  return (
+    <>
+      <VoiceAgent />
+      <RoomAudioRenderer />
+      {/* Disconnect Button */}
+      <button
+        onClick={handleDisconnect}
+        className="fixed top-6 right-6 px-4 py-2 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-400 hover:bg-rose-500/30 transition-all duration-200 flex items-center gap-2 text-sm font-medium"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+        End Session
+      </button>
+    </>
+  );
+}
 
 export default function Home() {
   const [token, setToken] = useState<string | null>(null);
@@ -16,11 +58,11 @@ export default function Home() {
   const startSession = useCallback(async () => {
     setIsConnecting(true);
     setError(null);
-    
+
     try {
       const roomName = 'voice-agent-room';
       const identity = `user-${Math.floor(Math.random() * 10000)}`;
-      
+
       const response = await fetch('/api/token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -41,6 +83,11 @@ export default function Home() {
     }
   }, []);
 
+  const handleDisconnect = useCallback(() => {
+    setToken(null);
+    setError(null); // Clear error on intentional disconnect
+  }, []);
+
   const serverUrl = process.env.NEXT_PUBLIC_LIVEKIT_URL;
 
   if (!token) {
@@ -54,7 +101,7 @@ export default function Home() {
               </svg>
             </div>
           </div>
-          
+
           <h1 className="text-4xl font-bold text-white mb-4 tracking-tight">
             AI Voice Assistant
           </h1>
@@ -65,11 +112,10 @@ export default function Home() {
           <button
             onClick={startSession}
             disabled={isConnecting}
-            className={`w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 ${
-              isConnecting 
-                ? 'bg-slate-800 text-slate-500 cursor-not-allowed' 
-                : 'bg-cyan-600 hover:bg-cyan-500 text-white shadow-xl shadow-cyan-900/20 hover:scale-[1.02]'
-            }`}
+            className={`w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 ${isConnecting
+              ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
+              : 'bg-cyan-600 hover:bg-cyan-500 text-white shadow-xl shadow-cyan-900/20 hover:scale-[1.02]'
+              }`}
           >
             {isConnecting ? (
               <span className="flex items-center justify-center gap-2">
@@ -89,7 +135,7 @@ export default function Home() {
               {error}
             </div>
           )}
-          
+
           <div className="mt-12 flex items-center justify-center gap-8 opacity-50">
             <span className="text-[10px] text-slate-500 uppercase tracking-[0.2em]">Next.js 14</span>
             <span className="text-[10px] text-slate-500 uppercase tracking-[0.2em]">LiveKit</span>
@@ -105,15 +151,15 @@ export default function Home() {
       serverUrl={serverUrl}
       token={token}
       connect={true}
+      audio={true}
       options={roomOptions}
       onDisconnected={() => {
         setToken(null);
-        setError('Disconnected from room');
       }}
       className="h-screen bg-slate-950"
     >
-      <VoiceAgent />
-      <RoomAudioRenderer />
+      <RoomContent onDisconnect={handleDisconnect} />
     </LiveKitRoom>
   );
 }
+

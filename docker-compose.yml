@@ -1,0 +1,42 @@
+services:
+  livekit:
+    image: livekit/livekit-server:latest
+    container_name: livekit-agent
+    restart: unless-stopped
+    ports:
+      - "7880:7880"        # Host 7880 -> Container 7880 (WebSocket)
+      - "7881:7881"        # Host 7881 -> Container 7881 (WebRTC TCP)
+      - "3478:3478/udp"    # TURN
+      - "50000-50050:50000-50050/udp" # Media UDP range (narrowed for Windows)
+    environment:
+      # LiveKit Server Configuration via Env
+      LIVEKIT_KEYS: "${LIVEKIT_API_KEY:-devkey}: ${LIVEKIT_API_SECRET:-secret}"
+      LIVEKIT_CONFIG: |
+        port: 7880
+        rtc:
+          tcp_port: 7881
+          port_range_start: 50000
+          port_range_end: 50050
+          use_external_ip: false
+        redis:
+          address: redis:6379
+        logging:
+          level: info
+
+  redis:
+    image: redis:7-alpine
+    container_name: livekit-redis
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning
+    ports:
+      - "6380:6379"        # Host 6380 -> Container 6379
+
+  # Optional: You can uncomment this to run the agent inside docker as well
+  # agent:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: voice-agent-worker
+  #   depends_on:
+  #     - livekit
+  #   env_file: .env

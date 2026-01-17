@@ -11,12 +11,18 @@ Initialize both backend and frontend projects with proper dependency management 
 - [x] **Task 1.1:** Initialize Backend Python Project
   - [x] Create `backend/` folder structure (`agent/`, `plugins/`, `api/`, `config/`)
   - [x] Create `requirements.txt` with dependencies (livekit-agents, livekit-plugins-openai, livekit-plugins-silero, websockets, pydantic-settings, fastapi, uvicorn)
-  - [x] Create `.env.example` with required variables (LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET, SARVAM_API_KEY, OPENAI_API_KEY)
+  <!-- DEVIATION: Centralized .env management -->
+  - [x] ~~Create `.env.example` with required variables~~ *(Handled in root)*
 
 - [x] **Task 1.2:** Initialize Frontend Next.js Project
   - [x] Create Next.js app in `frontend/` with TypeScript
   - [x] Install dependencies (@livekit/components-react, livekit-client)
   - [x] Create `.env.local.example` with required variables (NEXT_PUBLIC_LIVEKIT_URL, NEXT_PUBLIC_BACKEND_URL)
+
+- [ ] **Task 1.3:** Setup Local LiveKit Server (Docker)
+  - [x] Create `docker-compose.yml` file
+  - [x] Create `Dockerfile` for backend agent
+  - [ ] Verify Docker connectivity
 
 ---
 
@@ -78,6 +84,8 @@ Set up the main agent that orchestrates the STT, LLM, TTS pipeline.
 - [x] **Task 4.3:** Create Backend Entry and Server
   - [x] Create `agent/__init__.py` for exports
   - [x] Set up FastAPI app combining token API and agent startup
+  <!-- DEVIATION: Consolidated backend into a single process using FastAPI lifespan and aligned to local folder execution (running from /backend instead of root) -->
+  - [x] ~~Launch agent separately~~ *(Integrated into server.py via lifespan)*
 
 ---
 

@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
 
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
     
-    const response = await fetch(`${backendUrl}/token`, {
+    const response = await fetch(`${backendUrl}/api/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
