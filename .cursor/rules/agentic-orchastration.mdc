@@ -88,6 +88,43 @@ No manual specification needed. Role detection is automatic.
 
 ---
 
+## ACTION PLAN SYNCHRONIZATION
+
+**When:** Master Agent performs consolidation or declares feature COMPLETED
+
+**Requirement:** If the `master-agent.md` contains a `Source Reference` linking to an Action Plan file (e.g., `doc/Action-Plan/*.md`), the Master Agent **MUST** update that action plan to reflect the true implementation status.
+
+**Synchronization Rules:**
+
+1. **Mark Completed Tasks:** For every task/subtask verified as complete, change `[ ]` to `[x]` in the source action plan file.
+
+2. **Document Deviations:** If the actual implementation differs from the original plan:
+   - Do NOT delete or modify the original task text
+   - Use HTML comments `<!-- ... -->` to explain the deviation
+   - Use strikethrough `~~original text~~` with *(Reason)* suffix for modified subtasks
+   - Example:
+     ```markdown
+     - [x] **Task 3.1:** Implement Custom STT
+       <!-- DEVIATION: Used official livekit-plugins-sarvam instead of custom WebSocket -->
+       - [x] ~~Handle WebSocket streaming~~ *(Handled by livekit-plugins-sarvam)*
+     ```
+
+3. **Add Completion Status:** At the end of the action plan, add a completion status section:
+   ```markdown
+   ## Completion Status
+   **Status:** COMPLETED (YYYY-MM-DD)
+   All phases implemented and verified by Master Agent orchestration.
+   See: [Orchestration Workspace](path/to/master-agent.md)
+   ```
+
+4. **Timing:** 
+   - Update action plan during each consolidation cycle (for partial progress)
+   - Final update when feature is declared COMPLETED
+
+**Purpose:** This ensures the action plan always serves as a reliable source of truth for what was planned vs. what was actually implemented, maintaining project documentation integrity.
+
+---
+
 ## SUB-AGENT ACTIVATION
 
 **Detection:** User provides `sub-agent-N.md` file (where N = 1, 2, 3, etc.)
